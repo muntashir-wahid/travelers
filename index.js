@@ -2,16 +2,13 @@ const express = require("express");
 
 const PORT = 8000;
 
+// Middleware
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res
-    .status(200)
-    .json({ message: "Hello form the server side!", app: "Natours" });
-});
+// Route handlers
 
-app.get("/api/v1/tours", (req, res) => {
+const getAllTours = (req, res) => {
   console.log("Get all Tours");
   res.status(200).json({
     status: "success",
@@ -19,9 +16,9 @@ app.get("/api/v1/tours", (req, res) => {
       message: "Waiting for the database connection",
     },
   });
-});
+};
 
-app.get("/api/v1/tours/:id", (req, res) => {
+const getTour = (req, res) => {
   const { id } = req.params;
   console.log(`Get tour: ID:${id}`);
 
@@ -31,9 +28,9 @@ app.get("/api/v1/tours/:id", (req, res) => {
       message: "Waiting for the database connection",
     },
   });
-});
+};
 
-app.post("/api/v1/tours", (req, res) => {
+const createTour = (req, res) => {
   const tour = req.body;
   console.log("Create tour:", tour);
 
@@ -43,9 +40,9 @@ app.post("/api/v1/tours", (req, res) => {
       message: "Waiting for the database connection",
     },
   });
-});
+};
 
-app.patch("/api/v1/tours/:id", (req, res) => {
+const updateTour = (req, res) => {
   const { id } = req.params;
   console.log(`Update  tour: ID=${id}`);
 
@@ -55,9 +52,9 @@ app.patch("/api/v1/tours/:id", (req, res) => {
       message: "Waiting for the database connection",
     },
   });
-});
+};
 
-app.delete("/api/v1/tours/:id", (req, res) => {
+const deleteTour = (req, res) => {
   const { id } = req.params;
   console.log(`Delete tour: ID=${id}`);
 
@@ -65,7 +62,16 @@ app.delete("/api/v1/tours/:id", (req, res) => {
     status: "success",
     data: null,
   });
-});
+};
+
+// Routes
+
+app.route("/api/v1/tours").get(getAllTours).post(createTour);
+app
+  .route("/api/v1/tours/:id")
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 app.listen(PORT, () => {
   console.log(`Travelers app is running on prot ${PORT}`);
