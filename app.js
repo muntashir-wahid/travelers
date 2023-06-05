@@ -2,10 +2,16 @@ const express = require("express");
 
 const userRouter = require("./routes/userRoutes");
 const tourRouter = require("./routes/tourRoutes");
+const morgan = require("morgan");
+
+const app = express();
 
 // Middleware
-const app = express();
 app.use(express.json());
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // Route handlers
 
