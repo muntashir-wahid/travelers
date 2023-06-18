@@ -1,3 +1,5 @@
+const Tour = require("./../models/tourModel");
+
 exports.getAllTours = (req, res) => {
   console.log("Get all Tours");
   res.status(200).json({
@@ -20,14 +22,13 @@ exports.getTour = (req, res) => {
   });
 };
 
-exports.createTour = (req, res) => {
-  const tour = req.body;
-  console.log("Create tour:", tour);
+exports.createTour = async (req, res) => {
+  const tour = await Tour.create(req.body);
 
   res.status(201).json({
     status: "success",
     data: {
-      message: "Waiting for the database connection",
+      tour,
     },
   });
 };
