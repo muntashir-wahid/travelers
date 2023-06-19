@@ -1,5 +1,6 @@
 const Tour = require("./../models/tourModel");
 
+// Handler for getting all tours
 exports.getAllTours = async (req, res) => {
   try {
     const tours = await Tour.find();
@@ -19,6 +20,7 @@ exports.getAllTours = async (req, res) => {
   }
 };
 
+// Handler for getting one tour by id
 exports.getTour = async (req, res) => {
   try {
     const tour = await Tour.findById(req.params.id);
@@ -37,6 +39,7 @@ exports.getTour = async (req, res) => {
   }
 };
 
+// Handler for creating a new tour
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
@@ -55,24 +58,41 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.updateTour = (req, res) => {
-  const { id } = req.params;
-  console.log(`Update  tour: ID=${id}`);
+// Handler for updating a tour
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      message: "Waiting for the database connection",
-    },
-  });
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: "Invalid data sent.",
+    });
+  }
 };
 
-exports.deleteTour = (req, res) => {
-  const { id } = req.params;
-  console.log(`Delete tour: ID=${id}`);
+// Handler for deleting a tour
+exports.deleteTour = async (req, res) => {
+  try {
+    Tour.findByIdAndDelete(req.params.id);
 
-  res.status(204).json({
-    status: "success",
-    data: null,
-  });
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: "Invalid data sent.",
+    });
+  }
 };
